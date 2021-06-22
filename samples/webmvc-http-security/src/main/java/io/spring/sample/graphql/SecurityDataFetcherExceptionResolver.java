@@ -1,45 +1,42 @@
 package io.spring.sample.graphql;
 
-import java.util.Arrays;
-import java.util.List;
-
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
-import org.springframework.util.Assert;
-import reactor.core.publisher.Mono;
-
-import org.springframework.graphql.execution.DataFetcherExceptionResolver;
 import org.springframework.graphql.execution.ErrorType;
+import org.springframework.graphql.execution.SyncDataFetcherExceptionResolver;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
-// @formatter:off
+import java.util.Arrays;
+import java.util.List;
 
 @Component
-public class SecurityDataFetcherExceptionResolver implements DataFetcherExceptionResolver {
+public class SecurityDataFetcherExceptionResolver implements SyncDataFetcherExceptionResolver {
 
 	private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
 
-
 	@Override
-	public Mono<List<GraphQLError>> resolveException(Throwable exception, DataFetchingEnvironment environment) {
+	public List<GraphQLError> doResolveException(Throwable exception, DataFetchingEnvironment environment) {
 		if (exception instanceof AuthenticationException) {
 			return unauthorized(environment);
 		}
 		if (exception instanceof AccessDeniedException) {
-			return ReactiveSecurityContextHolder.getContext()
-				.map(SecurityContext::getAuthentication)
-				.filter(a -> !this.authenticationTrustResolver.isAnonymous(a))
-				.flatMap(anonymous -> forbidden(environment))
-				.switchIfEmpty(unauthorized(environment));
+			SecurityContext context = SecurityContextHolder.getContext();
+			Authentication authentication = context.getAuthentication();
+			if (this.authenticationTrustResolver.isAnonymous(authentication)) {
+				return unauthorized(environment);
+			}
+			return forbidden(environment);
 		}
-		return Mono.empty();
+		return null;
 	}
 
 	public void setAuthenticationTrustResolver(AuthenticationTrustResolver authenticationTrustResolver) {
@@ -47,20 +44,20 @@ public class SecurityDataFetcherExceptionResolver implements DataFetcherExceptio
 		this.authenticationTrustResolver = authenticationTrustResolver;
 	}
 
-	private Mono<List<GraphQLError>> unauthorized(DataFetchingEnvironment environment) {
-		return Mono.fromCallable(() -> Arrays.asList(
+	private List<GraphQLError> unauthorized(DataFetchingEnvironment environment) {
+		return Arrays.asList(
 				GraphqlErrorBuilder.newError(environment)
 						.errorType(ErrorType.UNAUTHORIZED)
 						.message("Unauthorized")
-						.build()));
+						.build());
 	}
 
-	private Mono<List<GraphQLError>> forbidden(DataFetchingEnvironment environment) {
-		return Mono.fromCallable(() -> Arrays.asList(
+	private List<GraphQLError> forbidden(DataFetchingEnvironment environment) {
+		return Arrays.asList(
 				GraphqlErrorBuilder.newError(environment)
 						.errorType(ErrorType.FORBIDDEN)
 						.message("Forbidden")
-						.build()));
+						.build());
 	}
 
 }
