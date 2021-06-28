@@ -32,6 +32,7 @@ import graphql.GraphqlErrorBuilder;
 import graphql.language.SourceLocation;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.graphql.execution.ErrorType;
 import reactor.core.publisher.Mono;
 
 import org.springframework.core.ParameterizedTypeReference;
@@ -294,6 +295,29 @@ public class GraphQlTesterTests {
 					assertThat(errors.get(0).getLocations()).hasSize(1);
 					assertThat(errors.get(0).getLocations().get(0).getLine()).isEqualTo(1);
 					assertThat(errors.get(0).getLocations().get(0).getColumn()).isEqualTo(2);
+				})
+				.path("me")
+				.pathDoesNotExist();
+
+		assertThat(this.inputCaptor.getValue().getQuery()).contains(query);
+	}
+
+	@Test
+	void errorsErrorType() throws Exception {
+
+		String query = "{me {name, friends}}";
+		setResponse(GraphqlErrorBuilder.newError()
+				.message("You are not authorized to access the resource")
+				.errorType(ErrorType.UNAUTHORIZED)
+				.location(new SourceLocation(1, 2))
+				.build());
+
+		this.graphQlTester.query(query)
+				.execute()
+				.errors()
+				.satisfy((errors) -> {
+					assertThat(errors).hasSize(1);
+					assertThat(errors.get(0).getErrorType()).isEqualTo(ErrorType.UNAUTHORIZED);
 				})
 				.path("me")
 				.pathDoesNotExist();
