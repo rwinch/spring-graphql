@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 // @formatter:off
 
 @SpringBootTest()
-@AutoConfigureWebTestClient
+//@AutoConfigureWebTestClient
 @AutoConfigureGraphQlTester
 class SampleApplicationTests {
 
