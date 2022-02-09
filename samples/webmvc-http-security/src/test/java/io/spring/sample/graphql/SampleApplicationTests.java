@@ -78,6 +78,24 @@ class SampleApplicationTests {
 	}
 
 	@Test
+	void employeesAsRob() {
+		this.graphQlTester.queryName("employees")
+				.httpHeaders(headers -> headers.setBasicAuth("rob", "rob"))
+				.execute()
+				.path("employees[0].name").entity(String.class).isEqualTo("Andi")
+				.path("employees[0].salary").entity(int.class).isEqualTo(42);
+	}
+
+	@Test
+	void employeesAsAdmin() {
+		this.graphQlTester.queryName("employees")
+				.httpHeaders(headers -> headers.setBasicAuth("admin", "admin"))
+				.execute()
+				.path("employees[0].name").entity(String.class).isEqualTo("Andi")
+				.path("employees[0].salary").entity(int.class).isEqualTo(42);
+	}
+
+	@Test
 	void invalidCredentials() {
 		assertThatThrownBy(() ->
 				this.graphQlTester.queryName("employeesNamesAndSalaries")

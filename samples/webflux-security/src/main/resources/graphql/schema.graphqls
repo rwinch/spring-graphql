@@ -1,3 +1,5 @@
+directive @auth(role : String!) on FIELD_DEFINITION
+
 type Query {
     employees: [Employee]
 }
@@ -9,7 +11,7 @@ type Employee {
     id: ID!
     name: String
     # restricted
-    salary: String
+    salary: String  @auth(role : "ADMIN")
 }
 
 input UpdateSalaryInput {

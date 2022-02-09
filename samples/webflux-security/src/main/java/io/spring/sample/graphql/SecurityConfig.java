@@ -17,6 +17,7 @@ package io.spring.sample.graphql;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.graphql.execution.SecurityRuntimeWiringConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -31,6 +32,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfig {
+
+	@Bean
+	SecurityRuntimeWiringConfigurer securityRuntimeWiringConfigurer() {
+		return new SecurityRuntimeWiringConfigurer();
+	}
 
 	@Bean
 	SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
