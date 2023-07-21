@@ -1,0 +1,85 @@
+{
+  "$id": "https://schemas.antora.org/site-manifest/1-0-0/draft-01",
+  "generated": "2023-07-21T03:43:24.230Z",
+  "url": "https://docs.spring.io/spring-graphql/reference",
+  "components": {
+    "graphql": {
+      "title": "Spring GraphQL",
+      "latest": "1.2.3",
+      "versions": {
+        "1.2.3": {
+          "prerelease": true,
+          "displayVersion": "1.2.3-SNAPSHOT",
+          "url": "/index.html",
+          "pages": [
+            {
+              "path": "index.adoc",
+              "url": "/index.html",
+              "title": "Spring for GraphQL"
+            },
+            {
+              "path": "boot-starter.adoc",
+              "url": "/boot-starter.html",
+              "title": "Boot Starter"
+            },
+            {
+              "path": "client.adoc",
+              "url": "/client.html",
+              "title": "Client"
+            },
+            {
+              "path": "controllers.adoc",
+              "url": "/controllers.html",
+              "title": "Annotated Controllers"
+            },
+            {
+              "path": "data.adoc",
+              "url": "/data.html",
+              "title": "Data Integration"
+            },
+            {
+              "path": "graalvm-native.adoc",
+              "url": "/graalvm-native.html",
+              "title": "GraalVM Native support"
+            },
+            {
+              "path": "graphiql.adoc",
+              "url": "/graphiql.html",
+              "title": "GraphiQL"
+            },
+            {
+              "path": "observability.adoc",
+              "url": "/observability.html",
+              "title": "Observability"
+            },
+            {
+              "path": "request-execution.adoc",
+              "url": "/request-execution.html",
+              "title": "Request Execution"
+            },
+            {
+              "path": "samples.adoc",
+              "url": "/samples.html",
+              "title": "Samples"
+            },
+            {
+              "path": "security.adoc",
+              "url": "/security.html",
+              "title": "Security"
+            },
+            {
+              "path": "testing.adoc",
+              "url": "/testing.html",
+              "title": "Testing"
+            },
+            {
+              "path": "transports.adoc",
+              "url": "/transports.html",
+              "title": "Server Transports"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

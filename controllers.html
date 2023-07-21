@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Annotated Controllers :: Spring GraphQL</title>
+    <link rel="prev" href="data.html">
+    <link rel="next" href="security.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.2">
+    <script>
+!function (theme, navWidth) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
+    </script>
+    <link rel="stylesheet" href="./_/css/site.css">
+    <link rel="stylesheet" href="./_/css/vendor/search.css">
+    <link rel="stylesheet" href="./_/css/vendor/asciidoctor-tabs.css">
+
+    <meta name="version" content="1.2.3">
+    <meta name="component" content="graphql">
+    <link rel="icon" href="./_/img/favicon.ico" type="image/vnd.microsoft.icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://spring.io">
+        <img
+          id="springlogo"
+          class="block"
+          src="./_/img/spring-logo.svg"
+          alt="Spring"
+        />
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Why Spring</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
+            <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
+            <a class="navbar-item" href="https://spring.io/batch">Batch</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Learn</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/learn">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
+            <a class="navbar-item" href="https://spring.io/guides">Guides</a>
+            <a class="navbar-item" href="https://spring.io/blog">Blog</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
+            <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Support</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/support">Overview</a>
+            <a class="navbar-item" href="https://spring.io/security">Security
+              Advisories</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Community</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
+            <a class="navbar-item" href="https://spring.io/events">Events</a>
+            <a class="navbar-item" href="https://spring.io/team">Team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
+  </nav>
+</header>
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
+<div class="nav-container" data-component="graphql" data-version="1.2.3">
+  <aside class="nav">
+    <div class="panels">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">Spring GraphQL</span>
+  <span class="version">1.2.3-SNAPSHOT</span>
+  <button class="browse-version" id="browse-version">
+    <svg
+      height="24px"
+      id="Layer_1"
+      style="enable-background:new 0 0 512 512;"
+      version="1.1"
+      viewBox="0 0 512 512"
+      width="24px"
+      xml:space="preserve"
+    ><g><path
+          d="M256,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S273.7,224,256,224L256,224z"
+        ></path><path
+          d="M128.4,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S146,224,128.4,224L128.4,224z"
+        ></path><path
+          d="M384,224c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S401.7,224,384,224L384,224z"
+        ></path></g></svg>
+  </button>
+</div><div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="transports.html">Server Transports</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="request-execution.html">Request Execution</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="data.html">Data Integration</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="controllers.html">Annotated Controllers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="security.html">Security</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="observability.html">Observability</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="graalvm-native.html">GraalVM Native support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="client.html">Client</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="graphiql.html">GraphiQL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="testing.html">Testing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="boot-starter.html">Boot Starter</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="samples.html">Samples</a>
+  </li>
+</ul>
+  </li>
+</ul>
+          <div class="toggle-sm">
+            <button id="nav-toggle-2" class="nav-toggle"></button>
+          </div>
+        </nav>
+      </div>
+      <div class="nav-collapse">
+        <button id="nav-collapse-toggle"><span></span></button>        
+      </div>
+    </div>
+    <div class="nav-resize"></div>
+  </aside>
+</div>
+<script>
+!function (sidebar) {
+  if (sidebar) {
+    document.body.classList.add('nav-sm')
+  }
+}(localStorage && localStorage.getItem('sidebar') === 'close')
+</script><main class="article">
+<div class="toolbar" role="navigation">
+  <button id="nav-toggle-1" class="nav-toggle"></button>
+<div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="Annotated Controllers"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+    <div class="sidebar-links">
+        <a href="https://github.com/rwinch/spring-graphql/edit/antora/spring-graphql-docs/modules/ROOT/pages/controllers.adoc">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          ><path
+              d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z"
+            ></path></svg>
+          Edit this Page
+        </a>
+              <a href="https://github.com/rwinch/spring-graphql" title="Github">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="512px"
+            id="Layer_1"
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          ><style type="text/css"><![CDATA[
+              .st0{fill-rule:evenodd;clip-rule:evenodd;} ]]></style><g><path
+                class="st0"
+                d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"
+              ></path></g></svg>
+          Github Project
+        </a>
+        <a href="https://stackoverflow.com/tags/spring-graphql">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path
+              d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
+            ></path></svg>
+          Stack Overflow
+        </a>
+    </div>
+  </div>
+</aside><div class="doc">
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Spring GraphQL</a></li>
+    <li><a href="controllers.html">Annotated Controllers</a></li>
+  </ul>
+</nav>
+<article>
+<h1 id="page-title" class="page">Annotated Controllers</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Spring for GraphQL provides an annotation-based programming model where <code>@Controller</code>
+components use annotations to declare handler methods with flexible method signatures to
+fetch the data for specific GraphQL fields. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class GreetingController {
+
+		@QueryMapping <i class="conum" data-value="1"></i><b>(1)</b>
+		public String hello() { <i class="conum" data-value="2"></i><b>(2)</b>
+			return "Hello, world!";
+		}
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Bind this method to a query, i.e. a field under the Query type.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Determine the query from the method name if not declared on the annotation.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Spring for GraphQL uses <code>RuntimeWiring.Builder</code> to register the above handler method as a
+<code>graphql.schema.DataFetcher</code> for the query named "hello".</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="controllers-declaration"><a class="anchor" href="#controllers-declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can define <code>@Controller</code> beans as standard Spring bean definitions. The
+<code>@Controller</code> stereotype allows for auto-detection, aligned with Spring general
+support for detecting <code>@Controller</code> and <code>@Component</code> classes on the classpath and
+auto-registering bean definitions for them. It also acts as a stereotype for the annotated
+class, indicating its role as a data fetching component in a GraphQL application.</p>
+</div>
+<div class="paragraph">
+<p><code>AnnotatedControllerConfigurer</code> detects <code>@Controller</code> beans and registers their
+annotated handler methods as <code>DataFetcher</code>s via <code>RuntimeWiring.Builder</code>. It is an
+implementation of <code>RuntimeWiringConfigurer</code> which can be added to <code>GraphQlSource.Builder</code>.
+The <a href="boot-starter.html" class="xref page">Boot Starter</a> automatically declares <code>AnnotatedControllerConfigurer</code> as a bean
+and adds all <code>RuntimeWiringConfigurer</code> beans to <code>GraphQlSource.Builder</code> and that enables
+support for annotated <code>DataFetcher</code>s, see the
+<a href="https://docs.spring.io/spring-boot/docs/3.1.1/reference/html/web.html#web.graphql.runtimewiring">GraphQL RuntimeWiring</a> section
+in the Boot starter documentation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="controllers.schema-mapping"><a class="anchor" href="#controllers.schema-mapping"></a><code>@SchemaMapping</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>@SchemaMapping</code> annotation maps a handler method to a field in the GraphQL schema
+and declares it to be the <code>DataFetcher</code> for that field. The annotation can specify the
+parent type name, and the field name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@SchemaMapping(typeName="Book", field="author")
+	public Author getAuthor(Book book) {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@SchemaMapping</code> annotation can also leave out those attributes, in which case the
+field name defaults to the method name, while the type name defaults to the simple class
+name of the source/parent object injected into the method. For example, the below
+defaults to type "Book" and field "author":</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@SchemaMapping
+	public Author author(Book book) {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@SchemaMapping</code> annotation can be declared at the class level to specify a default
+type name for all handler methods in the class.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+@SchemaMapping(typeName="Book")
+public class BookController {
+
+	// @SchemaMapping methods for fields of the "Book" type
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@QueryMapping</code>, <code>@MutationMapping</code>, and <code>@SubscriptionMapping</code> are meta annotations that
+are themselves annotated with <code>@SchemaMapping</code> and have the typeName preset to <code>Query</code>,
+<code>Mutation</code>, or <code>Subscription</code> respectively. Effectively, these are shortcut annotations
+for fields under the Query, Mutation, and Subscription types respectively. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@QueryMapping
+	public Book bookById(@Argument Long id) {
+		// ...
+	}
+
+	@MutationMapping
+	public Book addBook(@Argument BookInput bookInput) {
+		// ...
+	}
+
+	@SubscriptionMapping
+	public Flux&lt;Book&gt; newPublications() {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@SchemaMapping</code> handler methods have flexible signatures and can choose from a range of
+method arguments and return values..</p>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.signature"><a class="anchor" href="#controllers.schema-mapping.signature"></a>Method Signature</h3>
+<div class="paragraph">
+<p>Schema mapping handler methods can have any of the following method arguments:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method Argument</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Argument</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to a named field argument bound to a higher-level, typed Object.</p>
+<p class="tableblock">See <a href="#controllers.schema-mapping.argument"><code>@Argument</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Argument Map&lt;String, Object&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to the raw argument value.</p>
+<p class="tableblock">See <a href="#controllers.schema-mapping.argument"><code>@Argument</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to a named field argument bound to a higher-level, typed Object along
+with a flag to indicate if the input argument was omitted vs set to <code>null</code>.</p>
+<p class="tableblock">See <a href="#controllers.schema-mapping.argument-value"><code>ArgumentValue</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Arguments</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to all field arguments bound to a higher-level, typed Object.</p>
+<p class="tableblock">See <a href="#controllers.schema-mapping.arguments"><code>@Arguments</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Arguments Map&lt;String, Object&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to the raw map of arguments.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ProjectedPayload</code> Interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to field arguments through a project interface.</p>
+<p class="tableblock">See <a href="#controllers.schema-mapping.projectedpayload.argument"><code>@ProjectedPayload</code> Interface</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Source"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to the source (i.e. parent/container) instance of the field.</p>
+<p class="tableblock">See <a href="#controllers.schema-mapping.source">Source</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Subrange</code> and <code>ScrollSubrange</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to pagination arguments.</p>
+<p class="tableblock">See <a href="request-execution.html#execution.pagination" class="xref page">Pagination</a>, <a href="data.html#data.pagination.scroll" class="xref page">Scroll</a>, <a href="#controllers.schema-mapping.subrange"><code>Subrange</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Sort</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to sort details.</p>
+<p class="tableblock">See <a href="request-execution.html#execution.pagination" class="xref page">Pagination</a>, <a href="#controllers.schema-mapping.sort"><code>Sort</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLoader</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to a <code>DataLoader</code> in the <code>DataLoaderRegistry</code>.</p>
+<p class="tableblock">See <a href="#controllers.schema-mapping.data-loader"><code>DataLoader</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ContextValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to an attribute from the main <code>GraphQLContext</code> in <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@LocalContextValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to an attribute from the local <code>GraphQLContext</code> in <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GraphQLContext</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to the context from the <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.security.Principal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obtained from the Spring Security context, if available.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AuthenticationPrincipal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to <code>Authentication#getPrincipal()</code> from the Spring Security context.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataFetchingFieldSelectionSet</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to the selection set for the query through the <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Locale</code>, <code>Optional&lt;Locale&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to the <code>Locale</code> from the <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataFetchingEnvironment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For direct access to the underlying <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Schema mapping handler methods can return:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A resolved value of any type.</p>
+</li>
+<li>
+<p><code>Mono</code> and <code>Flux</code> for asynchronous value(s). Supported for controller methods and for
+any <code>DataFetcher</code> as described in <a href="request-execution.html#execution.reactive-datafetcher" class="xref page">Reactive <code>DataFetcher</code></a>.</p>
+</li>
+<li>
+<p><code>java.util.concurrent.Callable</code> to have the value(s) produced asynchronously.
+For this to work, <code>AnnotatedControllerConfigurer</code> must be configured with an <code>Executor</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.argument"><a class="anchor" href="#controllers.schema-mapping.argument"></a><code>@Argument</code></h3>
+<div class="paragraph">
+<p>In GraphQL Java, <code>DataFetchingEnvironment</code> provides access to a map of field-specific
+argument values. The values can be simple scalar values (e.g. String, Long), a <code>Map</code> of
+values for more complex input, or a <code>List</code> of values.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>@Argument</code> annotation to have an argument bound to a target object and
+injected into the handler method. Binding is performed by mapping argument values to a
+primary data constructor of the expected method parameter type, or by using a default
+constructor to create the object and then map argument values to its properties. This is
+repeated recursively, using all nested argument values and creating nested target objects
+accordingly. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@QueryMapping
+	public Book bookById(@Argument Long id) {
+		// ...
+	}
+
+	@MutationMapping
+	public Book addBook(@Argument BookInput bookInput) {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If the target object doesn&#8217;t have setters, and you can&#8217;t change that, you can use a
+property on <code>AnnotatedControllerConfigurer</code> to allow falling back on binding via direct
+field access.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By default, if the method parameter name is available (requires the <code>-parameters</code> compiler
+flag with Java 8+ or debugging info from the compiler), it is used to look up the argument.
+If needed, you can customize the name through the annotation, e.g. <code>@Argument("bookInput")</code>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The <code>@Argument</code> annotation does not have a "required" flag, nor the option to
+specify a default value. Both of these can be specified at the GraphQL schema level and
+are enforced by GraphQL Java.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If binding fails, a <code>BindException</code> is raised with binding issues accumulated as field
+errors where the <code>field</code> of each error is the argument path where the issue occurred.</p>
+</div>
+<div class="paragraph">
+<p>You can use <code>@Argument</code> with a <code>Map&lt;String, Object&gt;</code> argument, to obtain the raw value of
+the argument. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@MutationMapping
+	public Book addBook(@Argument Map&lt;String, Object&gt; bookInput) {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Prior to 1.2, <code>@Argument Map&lt;String, Object&gt;</code> returned the full arguments map if
+the annotation did not specify a name. After 1.2, <code>@Argument</code> with
+<code>Map&lt;String, Object&gt;</code> always returns the raw argument value, matching either to the name
+specified in the annotation, or to the parameter name. For access to the full arguments
+map, please use <a href="#controllers.schema-mapping.arguments"><code>@Arguments</code></a> instead.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.argument-value"><a class="anchor" href="#controllers.schema-mapping.argument-value"></a><code>ArgumentValue</code></h3>
+<div class="paragraph">
+<p>By default, input arguments in GraphQL are nullable and optional, which means an argument
+can be set to the <code>null</code> literal, or not provided at all. This distinction is useful for
+partial updates with a mutation where the underlying data may also be, either set to
+<code>null</code> or not changed at all accordingly. When using <a href="#controllers.schema-mapping.argument"><code>@Argument</code></a>
+there is no way to make such a distinction, because you would get <code>null</code> or an empty
+<code>Optional</code> in both cases.</p>
+</div>
+<div class="paragraph">
+<p>If you want to know not whether a value was not provided at all, you can declare an
+<code>ArgumentValue</code> method parameter, which is a simple container for the resulting value,
+along with a flag to indicate whether the input argument was omitted altogether. You
+can use this instead of <code>@Argument</code>, in which case the argument name is determined from
+the method parameter name, or together with <code>@Argument</code> to specify the argument name.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@MutationMapping
+	public void addBook(ArgumentValue&lt;BookInput&gt; bookInput) {
+		if (!bookInput.isOmitted()) {
+			BookInput value = bookInput.value();
+			// ...
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ArgumentValue</code> is also supported as a field within the object structure of an <code>@Argument</code>
+method parameter, either initialized via a constructor argument or via a setter, including
+as a field of an object nested at any level below the top level object.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.arguments"><a class="anchor" href="#controllers.schema-mapping.arguments"></a><code>@Arguments</code></h3>
+<div class="paragraph">
+<p>Use the <code>@Arguments</code> annotation, if you want to bind the full arguments map onto a single
+target Object, in contrast to <code>@Argument</code>, which binds a specific, named argument.</p>
+</div>
+<div class="paragraph">
+<p>For example, <code>@Argument BookInput bookInput</code> uses the value of the argument "bookInput"
+to initialize <code>BookInput</code>, while <code>@Arguments</code> uses the full arguments map and in that
+case, top-level arguments are bound to <code>BookInput</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>You can use <code>@Arguments</code> with a <code>Map&lt;String, Object&gt;</code> argument, to obtain the raw map of
+all argument values.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.projectedpayload.argument"><a class="anchor" href="#controllers.schema-mapping.projectedpayload.argument"></a><code>@ProjectedPayload</code> Interface</h3>
+<div class="paragraph">
+<p>As an alternative to using complete Objects with <a href="#controllers.schema-mapping.argument"><code>@Argument</code></a>,
+you can also use a projection interface to access GraphQL request arguments through a
+well-defined, minimal interface. Argument projections are provided by
+<a href="https://docs.spring.io/spring-data/commons/docs/current/reference/html/#projections.interfaces">Spring Data&#8217;s Interface projections</a>
+when Spring Data is on the class path.</p>
+</div>
+<div class="paragraph">
+<p>To make use of this, create an interface annotated with <code>@ProjectedPayload</code> and declare
+it as a controller method parameter. If the parameter is annotated with <code>@Argument</code>,
+it applies to an individual argument within the <code>DataFetchingEnvironment.getArguments()</code>
+map. When declared without <code>@Argument</code>, the projection works on top-level arguments in
+the complete arguments map.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@QueryMapping
+	public Book bookById(BookIdProjection bookId) {
+		// ...
+	}
+
+	@MutationMapping
+	public Book addBook(@Argument BookInputProjection bookInput) {
+		// ...
+	}
+}
+
+@ProjectedPayload
+interface BookIdProjection {
+
+	Long getId();
+}
+
+@ProjectedPayload
+interface BookInputProjection {
+
+	String getName();
+
+	@Value("#{target.author + ' ' + target.name}")
+	String getAuthorAndName();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.source"><a class="anchor" href="#controllers.schema-mapping.source"></a>Source</h3>
+<div class="paragraph">
+<p>In GraphQL Java, the <code>DataFetchingEnvironment</code> provides access to the source (i.e.
+parent/container) instance of the field. To access this, simply declare a method parameter
+of the expected target type.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@SchemaMapping
+	public Author author(Book book) {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The source method argument also helps to determine the type name for the mapping.
+If the simple name of the Java class matches the GraphQL type, then there is no need to
+explicitly specify the type name in the <code>@SchemaMapping</code> annotation.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A <a href="#controllers.batch-mapping"><code>@BatchMapping</code></a> handler method can batch load all authors for a query,
+given a list of source/parent books objects.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.subrange"><a class="anchor" href="#controllers.schema-mapping.subrange"></a><code>Subrange</code></h3>
+<div class="paragraph">
+<p>When there is a <a href="request-execution.html#execution.pagination.cursor.strategy" class="xref page"><code>CursorStrategy</code></a> bean in Spring configuration,
+controller methods support a <code>Subrange&lt;P&gt;</code> argument where <code>&lt;P&gt;</code> is a relative position
+converted from a cursor. For Spring Data, <code>ScrollSubrange</code> exposes <code>ScrollPosition</code>.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@QueryMapping
+	public Window&lt;Book&gt; books(ScrollSubrange subrange) {
+		ScrollPosition position = subrange.position().orElse(OffsetScrollPosition.initial())
+		int count = subrange.count().orElse(20);
+		// ...
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="request-execution.html#execution.pagination" class="xref page">Pagination</a> for an overview of pagination and of built-in mechanisms.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.sort"><a class="anchor" href="#controllers.schema-mapping.sort"></a><code>Sort</code></h3>
+<div class="paragraph">
+<p>When there is a <a href="data.html#data.pagination.scroll" class="xref page">SortStrategy</a> bean in Spring configuration, controller
+methods support <code>Sort</code> as a method argument. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@QueryMapping
+	public Window&lt;Book&gt; books(Optional&lt;Sort&gt; optionalSort) {
+		Sort sort = optionalSort.orElse(Sort.by(..));
+	}
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.data-loader"><a class="anchor" href="#controllers.schema-mapping.data-loader"></a><code>DataLoader</code></h3>
+<div class="paragraph">
+<p>When you register a batch loading function for an entity, as explained in
+<a href="request-execution.html#execution.batching" class="xref page">Batch Loading</a>, you can access the <code>DataLoader</code> for the entity by declaring a
+method argument of type <code>DataLoader</code> and use it to load the entity:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	public BookController(BatchLoaderRegistry registry) {
+		registry.forTypePair(Long.class, Author.class).registerMappedBatchLoader((authorIds, env) -&gt; {
+			// return Map&lt;Long, Author&gt;
+		});
+	}
+
+	@SchemaMapping
+	public CompletableFuture&lt;Author&gt; author(Book book, DataLoader&lt;Long, Author&gt; loader) {
+		return loader.load(book.getAuthorId());
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, <code>BatchLoaderRegistry</code> uses the full class name of the value type (e.g. the
+class name for <code>Author</code>) for the key of the registration, and therefore simply declaring
+the <code>DataLoader</code> method argument with generic types provides enough information
+to locate it in the <code>DataLoaderRegistry</code>. As a fallback, the <code>DataLoader</code> method argument
+resolver will also try the method argument name as the key but typically that should not
+be necessary.</p>
+</div>
+<div class="paragraph">
+<p>Note that for many cases with loading related entities, where the <code>@SchemaMapping</code> simply
+delegates to a <code>DataLoader</code>, you can reduce boilerplate by using a
+<a href="#controllers.batch-mapping">@BatchMapping</a> method as described in the next section.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controllers.schema-mapping.validation"><a class="anchor" href="#controllers.schema-mapping.validation"></a>Validation</h3>
+<div class="paragraph">
+<p>When a <code>javax.validation.Validator</code> bean is found, <code>AnnotatedControllerConfigurer</code> enables support for
+<a href="https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html#validation-beanvalidation-overview">Bean Validation</a>
+on annotated controller methods. Typically, the bean is of type <code>LocalValidatorFactoryBean</code>.</p>
+</div>
+<div class="paragraph">
+<p>Bean validation lets you declare constraints on types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class BookInput {
+
+	@NotNull
+	private String title;
+
+	@NotNull
+	@Size(max=13)
+	private String isbn;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then annotate a controller method parameter with <code>@Valid</code> to validate it before
+method invocation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@MutationMapping
+	public Book addBook(@Argument @Valid BookInput bookInput) {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If an error occurs during validation, a <code>ConstraintViolationException</code> is raised.
+You can use the <a href="request-execution.html#execution.exceptions" class="xref page">Exceptions</a> chain to decide how to present that to clients
+by turning it into an error to include in the GraphQL response.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+In addition to <code>@Valid</code>, you can also use Spring&#8217;s <code>@Validated</code> that allows
+specifying validation groups.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Bean validation is useful for <a href="#controllers.schema-mapping.argument"><code>@Argument</code></a>,
+<a href="#controllers.schema-mapping.arguments"><code>@Arguments</code></a>, and
+<a href="#controllers.schema-mapping.projectedpayload.argument">@ProjectedPayload</a>
+method parameters, but applies more generally to any method parameter.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Validation and Kotlin Coroutines</div>
+<div class="paragraph">
+<p>Hibernate Validator is not compatible with Kotlin Coroutine methods and fails when
+introspecting their method parameters. Please see
+<a href="https://github.com/spring-projects/spring-graphql/issues/344#issuecomment-1082814093">spring-projects/spring-graphql#344 (comment)</a>
+for links to relevant issues and a suggested workaround.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="controllers.batch-mapping"><a class="anchor" href="#controllers.batch-mapping"></a><code>@BatchMapping</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="request-execution.html#execution.batching" class="xref page">Batch Loading</a> addresses the N+1 select problem through the use of an
+<code>org.dataloader.DataLoader</code> to defer the loading of individual entity instances, so they
+can be loaded together. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	public BookController(BatchLoaderRegistry registry) {
+		registry.forTypePair(Long.class, Author.class).registerMappedBatchLoader((authorIds, env) -&gt; {
+			// return Map&lt;Long, Author&gt;
+		});
+	}
+
+	@SchemaMapping
+	public CompletableFuture&lt;Author&gt; author(Book book, DataLoader&lt;Long, Author&gt; loader) {
+		return loader.load(book.getAuthorId());
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the straight-forward case of loading an associated entity, shown above, the
+<code>@SchemaMapping</code> method does nothing more than delegate to the <code>DataLoader</code>. This is
+boilerplate that can be avoided with a <code>@BatchMapping</code> method. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@BatchMapping
+	public Mono&lt;Map&lt;Book, Author&gt;&gt; author(List&lt;Book&gt; books) {
+		// ...
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above becomes a batch loading function in the <code>BatchLoaderRegistry</code>
+where keys are <code>Book</code> instances and the loaded values their authors. In addition, a
+<code>DataFetcher</code> is also transparently bound to the <code>author</code> field of the type <code>Book</code>, which
+simply delegates to the <code>DataLoader</code> for authors, given its source/parent <code>Book</code> instance.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To be used as a unique key, <code>Book</code> must implement <code>hashcode</code> and <code>equals</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By default, the field name defaults to the method name, while the type name defaults to
+the simple class name of the input <code>List</code> element type. Both can be customized through
+annotation attributes. The type name can also be inherited from a class level
+<code>@SchemaMapping</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="controllers.batch-mapping.signature"><a class="anchor" href="#controllers.batch-mapping.signature"></a>Method Signature</h3>
+<div class="paragraph">
+<p>Batch mapping methods support the following arguments:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method Argument</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;K&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The source/parent objects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.security.Principal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obtained from Spring Security context, if available.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ContextValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to a value from the <code>GraphQLContext</code> of <code>BatchLoaderEnvironment</code>,
+  which is the same context as the one from the <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GraphQLContext</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For access to the context from the <code>BatchLoaderEnvironment</code>,
+  which is the same context as the one from the <code>DataFetchingEnvironment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BatchLoaderEnvironment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The environment that is available in GraphQL Java to a
+<code>org.dataloader.BatchLoaderWithContext</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Batch mapping methods can return:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Mono&lt;Map&lt;K,V&gt;&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A map with parent objects as keys, and batch loaded objects as values.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Flux&lt;V&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A sequence of batch loaded objects that must be in the same order as the source/parent
+  objects passed into the method.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Map&lt;K,V&gt;</code>, <code>Collection&lt;V&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Imperative variants, e.g. without remote calls to make.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Callable&lt;Map&lt;K,V&gt;&gt;</code>, <code>Callable&lt;Collection&lt;V&gt;&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Imperative variants to be invoked asynchronously. For this to work,
+  <code>AnnotatedControllerConfigurer</code> must be configured with an <code>Executor</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="controllers.exception-handler"><a class="anchor" href="#controllers.exception-handler"></a><code>@GraphQlExceptionHandler</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use <code>@GraphQlExceptionHandler</code> methods to handle exceptions from data fetching with a
+flexible <a href="#controllers.exception-handler.signature">method signature</a>. When declared in a
+controller, exception handler methods apply to exceptions from the same controller:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller
+public class BookController {
+
+	@QueryMapping
+	public Book bookById(@Argument Long id) {
+		// ...
+	}
+
+	@GraphQlExceptionHandler
+	public GraphQLError handle(BindException ex) {
+		return GraphQLError.newError().errorType(ErrorType.BAD_REQUEST).message("...").build();
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When declared in an <code>@ControllerAdvice</code>, exception handler methods apply across controllers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ControllerAdvice
+public class GlobalExceptionHandler {
+
+	@GraphQlExceptionHandler
+	public GraphQLError handle(BindException ex) {
+		return GraphQLError.newError().errorType(ErrorType.BAD_REQUEST).message("...").build();
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Exception handling via <code>@GraphQlExceptionHandler</code> methods is applied automatically to
+controller invocations. To handle exceptions from other <code>graphql.schema.DataFetcher</code>
+implementations, not based on controller methods, obtain a
+<code>DataFetcherExceptionResolver</code> from <code>AnnotatedControllerConfigurer</code>, and register it in
+<code>GraphQlSource.Builder</code> as a <a href="request-execution.html#execution.exceptions" class="xref page">DataFetcherExceptionResolver</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="controllers.exception-handler.signature"><a class="anchor" href="#controllers.exception-handler.signature"></a>Method Signature</h3>
+<div class="paragraph">
+<p>Exception handler methods support a flexible method signature with method arguments
+resolved from a <code>DataFetchingEnvironment,</code> and matching to those of
+<a href="#controllers.schema-mapping.arguments">@SchemaMapping methods</a>.</p>
+</div>
+<div class="paragraph">
+<p>Supported return types are listed below:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>graphql.GraphQLError</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolve the exception to a single field error.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Collection&lt;GraphQLError&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolve the exception to multiple field errors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolve the exception without response errors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolve the exception to a single error, to multiple errors, or none.
+  The return value must be <code>GraphQLError</code>, <code>Collection&lt;GraphQLError&gt;</code>, or <code>null</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Mono&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For asynchronous resolution where <code>&lt;T&gt;</code> is one of the supported, synchronous, return types.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="data.html">Data Integration</a></span>
+  <span class="next"><a href="security.html">Security</a></span>
+</nav>
+</article>
+</div>  </div>
+</main>
+<div class="modal micromodal-slide" id="modal-versions" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+            <main class="modal__content" id="modal-versions-content">
+              <button data-micromodal-close class="modal-versions-close">
+                <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>
+              </button>
+              <div class="colset">
+                <div class="col-left">
+                  <ul class="nav-versions">
+                    <li class="component is-current">
+                      <a class="title" href="index.html">Spring GraphQL</a>
+                      <ul class="versions">
+                        <li class="version is-current is-latest">
+                          <a href="index.html">
+                            1.2.3-SNAPSHOT<span class="current">current</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-right">
+                  <ul>
+                    <li>
+                      Related Spring Documentation
+                      <ul>
+                        <li><a href="https://docs.spring.io/spring-framework/reference/">Spring Framework</a></li>
+                        <li><a href="https://docs.spring.io/spring-security/reference/">Spring Security</a></li>
+                        <li><a href="https://docs.spring.io/spring-ldap/reference/">Spring LDAP</a></li>
+                        <li><a href="https://docs.spring.io/spring-session/reference/">Spring Session</a></li>
+                        <li><a href="https://docs.spring.io/spring-authorization-server/reference/">Spring Authorization Server</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer flex">
+    <div id="spring-links flex">
+        <img id="springlogo" src="./_/img/spring-logo.svg" alt="Spring">
+        <p class="smallest antialiased">© <script>var d = new Date();
+        document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+    </div>
+    <div id="social-icons" class="flex jc-between">
+        <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
+        <a href="https://github.com/spring-projects" title="Github"><svg id="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><path class="cls-1" d="M38,0a38,38,0,1,0,38,38A38,38,0,0,0,38,0Z"/></g><path class="cls-2" d="M38,15.59A22.95,22.95,0,0,0,30.71,60.3c1.15.21,1.57-.5,1.57-1.11s0-2,0-3.9c-6.38,1.39-7.73-3.07-7.73-3.07A6.09,6.09,0,0,0,22,48.86c-2.09-1.42.15-1.39.15-1.39a4.81,4.81,0,0,1,3.52,2.36c2,3.5,5.37,2.49,6.67,1.91a4.87,4.87,0,0,1,1.46-3.07c-5.09-.58-10.45-2.55-10.45-11.34a8.84,8.84,0,0,1,2.36-6.15,8.29,8.29,0,0,1,.23-6.07s1.92-.62,6.3,2.35a21.82,21.82,0,0,1,11.49,0c4.38-3,6.3-2.35,6.3-2.35a8.29,8.29,0,0,1,.23,6.07,8.84,8.84,0,0,1,2.36,6.15c0,8.81-5.37,10.75-10.48,11.32a5.46,5.46,0,0,1,1.56,4.25c0,3.07,0,5.54,0,6.29s.42,1.33,1.58,1.1A22.94,22.94,0,0,0,38,15.59Z"/></svg></a>
+        <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
+    </div>
+</footer>
+<script src="./_/js/vendor/import.js"></script>
+<script src="./_/js/site.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<script async src="./_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <main class="modal__content" id="modal-1-content">
+                <div id="searchbox"></div>
+                <div id="counter"></div>
+                <div class="search-by">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
+                        <img class="light" width="140" src="./_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="./_/img/algolia-dark.svg" />
+                    </a>
+                </div>
+                <div id="hits"></div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
+<script async id="search-script" src="./_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springgraphql" data-stylesheet="./_/css/vendor/search.css" data-page-version="1.2.3"></script>
+
+  </body>
+</html>

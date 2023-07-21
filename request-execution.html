@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Request Execution :: Spring GraphQL</title>
+    <link rel="prev" href="transports.html">
+    <link rel="next" href="data.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.2">
+    <script>
+!function (theme, navWidth) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
+    </script>
+    <link rel="stylesheet" href="./_/css/site.css">
+    <link rel="stylesheet" href="./_/css/vendor/search.css">
+    <link rel="stylesheet" href="./_/css/vendor/asciidoctor-tabs.css">
+
+    <meta name="version" content="1.2.3">
+    <meta name="component" content="graphql">
+    <link rel="icon" href="./_/img/favicon.ico" type="image/vnd.microsoft.icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://spring.io">
+        <img
+          id="springlogo"
+          class="block"
+          src="./_/img/spring-logo.svg"
+          alt="Spring"
+        />
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Why Spring</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
+            <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
+            <a class="navbar-item" href="https://spring.io/batch">Batch</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Learn</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/learn">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
+            <a class="navbar-item" href="https://spring.io/guides">Guides</a>
+            <a class="navbar-item" href="https://spring.io/blog">Blog</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
+            <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Support</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/support">Overview</a>
+            <a class="navbar-item" href="https://spring.io/security">Security
+              Advisories</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Community</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
+            <a class="navbar-item" href="https://spring.io/events">Events</a>
+            <a class="navbar-item" href="https://spring.io/team">Team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
+  </nav>
+</header>
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
+<div class="nav-container" data-component="graphql" data-version="1.2.3">
+  <aside class="nav">
+    <div class="panels">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">Spring GraphQL</span>
+  <span class="version">1.2.3-SNAPSHOT</span>
+  <button class="browse-version" id="browse-version">
+    <svg
+      height="24px"
+      id="Layer_1"
+      style="enable-background:new 0 0 512 512;"
+      version="1.1"
+      viewBox="0 0 512 512"
+      width="24px"
+      xml:space="preserve"
+    ><g><path
+          d="M256,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S273.7,224,256,224L256,224z"
+        ></path><path
+          d="M128.4,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S146,224,128.4,224L128.4,224z"
+        ></path><path
+          d="M384,224c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S401.7,224,384,224L384,224z"
+        ></path></g></svg>
+  </button>
+</div><div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="transports.html">Server Transports</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="request-execution.html">Request Execution</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="data.html">Data Integration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="controllers.html">Annotated Controllers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="security.html">Security</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="observability.html">Observability</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="graalvm-native.html">GraalVM Native support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="client.html">Client</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="graphiql.html">GraphiQL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="testing.html">Testing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="boot-starter.html">Boot Starter</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="samples.html">Samples</a>
+  </li>
+</ul>
+  </li>
+</ul>
+          <div class="toggle-sm">
+            <button id="nav-toggle-2" class="nav-toggle"></button>
+          </div>
+        </nav>
+      </div>
+      <div class="nav-collapse">
+        <button id="nav-collapse-toggle"><span></span></button>        
+      </div>
+    </div>
+    <div class="nav-resize"></div>
+  </aside>
+</div>
+<script>
+!function (sidebar) {
+  if (sidebar) {
+    document.body.classList.add('nav-sm')
+  }
+}(localStorage && localStorage.getItem('sidebar') === 'close')
+</script><main class="article">
+<div class="toolbar" role="navigation">
+  <button id="nav-toggle-1" class="nav-toggle"></button>
+<div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="Request Execution"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+    <div class="sidebar-links">
+        <a href="https://github.com/rwinch/spring-graphql/edit/antora/spring-graphql-docs/modules/ROOT/pages/request-execution.adoc">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          ><path
+              d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z"
+            ></path></svg>
+          Edit this Page
+        </a>
+              <a href="https://github.com/rwinch/spring-graphql" title="Github">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="512px"
+            id="Layer_1"
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          ><style type="text/css"><![CDATA[
+              .st0{fill-rule:evenodd;clip-rule:evenodd;} ]]></style><g><path
+                class="st0"
+                d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"
+              ></path></g></svg>
+          Github Project
+        </a>
+        <a href="https://stackoverflow.com/tags/spring-graphql">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path
+              d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
+            ></path></svg>
+          Stack Overflow
+        </a>
+    </div>
+  </div>
+</aside><div class="doc">
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Spring GraphQL</a></li>
+    <li><a href="request-execution.html">Request Execution</a></li>
+  </ul>
+</nav>
+<article>
+<h1 id="page-title" class="page">Request Execution</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>ExecutionGraphQlService</code> is the main Spring abstraction to call GraphQL Java to execute
+requests. Underlying transports, such as the <a href="transports.html#server.transports.http" class="xref page">HTTP</a>, delegate to
+<code>ExecutionGraphQlService</code> to handle requests.</p>
+</div>
+<div class="paragraph">
+<p>The main implementation, <code>DefaultExecutionGraphQlService</code>, is configured with a
+<code>GraphQlSource</code> for access to the <code>graphql.GraphQL</code> instance to invoke.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="execution.graphqlsource"><a class="anchor" href="#execution.graphqlsource"></a><code>GraphQLSource</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>GraphQlSource</code> is a contract to expose the <code>graphql.GraphQL</code> instance to use that also
+includes a builder API to build that instance. The default builder is available via
+<code>GraphQlSource.schemaResourceBuilder()</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="boot-starter.html" class="xref page">Boot Starter</a> creates an instance of this builder and further initializes it
+to <a href="#execution.graphqlsource.schema-resources">load schema files</a> from a configurable location,
+to <a href="https://docs.spring.io/spring-boot/docs/3.1.1/reference/html/application-properties.html#appendix.application-properties.web">expose properties</a>
+to apply to <code>GraphQlSource.Builder</code>, to detect
+<a href="#execution.graphqlsource.runtimewiring-configurer"><code>RuntimeWiringConfigurer</code></a> beans,
+<a href="https://www.graphql-java.com/documentation/instrumentation">Instrumentation</a> beans for
+<a href="https://docs.spring.io/spring-boot/docs/3.1.1/reference/html/actuator.html#actuator.metrics.supported.spring-graphql">GraphQL metrics</a>,
+and <code>DataFetcherExceptionResolver</code> and <code>SubscriptionExceptionResolver</code>  beans for
+<a href="#execution.exceptions">exception resolution</a>. For further customizations, you can also
+declare a <code>GraphQlSourceBuilderCustomizer</code> bean, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Configuration(proxyBeanMethods = false)
+class GraphQlConfig {
+
+	@Bean
+	public GraphQlSourceBuilderCustomizer sourceBuilderCustomizer() {
+		return (builder) -&gt;
+				builder.configureGraphQl(graphQlBuilder -&gt;
+						graphQlBuilder.executionIdProvider(new CustomExecutionIdProvider()));
+	}
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.schema-resources"><a class="anchor" href="#execution.graphqlsource.schema-resources"></a>Schema Resources</h3>
+<div class="paragraph">
+<p><code>GraphQlSource.Builder</code> can be configured with one or more <code>Resource</code> instances to be
+parsed and merged together. That means schema files can be loaded from just about any
+location.</p>
+</div>
+<div class="paragraph">
+<p>By default, the Boot starter
+<a href="https://docs.spring.io/spring-boot/docs/3.1.1/reference/html/web.html#web.graphql.schema">looks for schema files</a> with extensions
+".graphqls" or ".gqls" under the location <code>classpath:graphql/**</code>, which is typically
+<code>src/main/resources/graphql</code>. You can also use a file system location, or any location
+supported by the Spring <code>Resource</code> hierarchy, including a custom implementation that
+loads schema files from remote locations, from storage, or from memory.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Use <code>classpath*:graphql/**/</code> to find schema files across multiple classpath
+locations, e.g. across multiple modules.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.schema-creation"><a class="anchor" href="#execution.graphqlsource.schema-creation"></a>Schema Creation</h3>
+<div class="paragraph">
+<p>By default, <code>GraphQlSource.Builder</code> uses the GraphQL Java <code>SchemaGenerator</code> to create the
+<code>graphql.schema.GraphQLSchema</code>. This works for typical use, but if you need to use a
+different generator, e.g. for federation, you can register a <code>schemaFactory</code> callback:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">GraphQlSource.Builder builder = ...
+
+builder.schemaResources(..)
+		.configureRuntimeWiring(..)
+		.schemaFactory((typeDefinitionRegistry, runtimeWiring) -&gt; {
+			// create GraphQLSchema
+		})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="#execution.graphqlsource">GraphQlSource section</a> explains how to configure that with Spring Boot.</p>
+</div>
+<div class="paragraph">
+<p>For an example with Apollo Federation, see
+<a href="https://github.com/apollographql/federation-jvm-spring-example">federation-jvm-spring-example</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.runtimewiring-configurer"><a class="anchor" href="#execution.graphqlsource.runtimewiring-configurer"></a><code>RuntimeWiringConfigurer</code></h3>
+<div class="paragraph">
+<p>You can use <code>RuntimeWiringConfigurer</code> to register:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Custom scalar types.</p>
+</li>
+<li>
+<p><a href="#execution.graphqlsource.directives">Directives</a> handling code.</p>
+</li>
+<li>
+<p>Default <a href="#execution.graphqlsource.default-type-resolver"><code>TypeResolver</code></a> for interface and union types.</p>
+</li>
+<li>
+<p><code>DataFetcher</code> for a field although applications will typically use <a href="controllers.html" class="xref page">Annotated Controllers</a>, and
+those are detected and registered as <code>DataFetcher</code>s by <code>AnnotatedControllerConfigurer</code>,
+which is a <code>RuntimeWiringConfigurer</code>. The <a href="boot-starter.html" class="xref page">Boot Starter</a> automatically registers
+<code>AnnotatedControllerConfigurer</code>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+GraphQL Java, server applications use Jackson only for serialization to and from maps of data.
+Client input is parsed into a map. Server output is assembled into a map based on the field selection set.
+This means you can&#8217;t rely on Jackson serialization/deserialization annotations.
+Instead, you can use <a href="https://www.graphql-java.com/documentation/scalars/">custom scalar types</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <a href="boot-starter.html" class="xref page">Boot Starter</a> detects beans of type <code>RuntimeWiringConfigurer</code> and
+registers them in the <code>GraphQlSource.Builder</code>. That means in most cases, you&#8217;ll' have
+something like the following in your configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Configuration
+public class GraphQlConfig {
+
+	@Bean
+	public RuntimeWiringConfigurer runtimeWiringConfigurer(BookRepository repository) {
+
+		GraphQLScalarType scalarType = ... ;
+		SchemaDirectiveWiring directiveWiring = ... ;
+		DataFetcher dataFetcher = QuerydslDataFetcher.builder(repository).single();
+
+		return wiringBuilder -&gt; wiringBuilder
+				.scalar(scalarType)
+				.directiveWiring(directiveWiring)
+				.type("Query", builder -&gt; builder.dataFetcher("book", dataFetcher));
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you need to add a <code>WiringFactory</code>, e.g. to make registrations that take into account
+schema definitions, implement the alternative <code>configure</code> method that accepts both the
+<code>RuntimeWiring.Builder</code> and an output <code>List&lt;WiringFactory&gt;</code>. This allows you to add any
+number of factories that are then invoked in sequence.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.default-type-resolver"><a class="anchor" href="#execution.graphqlsource.default-type-resolver"></a><code>TypeResolver</code></h3>
+<div class="paragraph">
+<p><code>GraphQlSource.Builder</code> registers <code>ClassNameTypeResolver</code> as the default <code>TypeResolver</code>
+to use for GraphQL Interfaces and Unions that don&#8217;t already have such a registration
+through a <a href="#execution.graphqlsource.runtimewiring-configurer"><code>RuntimeWiringConfigurer</code></a>. The purpose of
+a <code>TypeResolver</code> in GraphQL Java is to determine the GraphQL Object type for values
+returned from the <code>DataFetcher</code> for a GraphQL Interface or Union field.</p>
+</div>
+<div class="paragraph">
+<p><code>ClassNameTypeResolver</code> tries to match the simple class name of the value to a GraphQL
+Object Type and if it is not successful, it also navigates its super types including
+base classes and interfaces, looking for a match. <code>ClassNameTypeResolver</code> provides an
+option to configure a name extracting function along with <code>Class</code> to GraphQL Object type
+name mappings that should help to cover more corner cases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">GraphQlSource.Builder builder = ...
+ClassNameTypeResolver classNameTypeResolver = new ClassNameTypeResolver();
+classNameTypeResolver.setClassNameExtractor((klass) -&gt; {
+	// Implement Custom ClassName Extractor here
+});
+builder.defaultTypeResolver(classNameTypeResolver);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="#execution.graphqlsource">GraphQlSource section</a> explains how to configure that with Spring Boot.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.directives"><a class="anchor" href="#execution.graphqlsource.directives"></a>Directives</h3>
+<div class="paragraph">
+<p>The GraphQL language supports directives that "describe alternate runtime execution and
+type validation behavior in a GraphQL document". Directives are similar to annotations in
+Java but declared on types, fields, fragments and operations in a GraphQL document.</p>
+</div>
+<div class="paragraph">
+<p>GraphQL Java provides the <code>SchemaDirectiveWiring</code> contract to help applications detect
+and handle directives. For more details, see
+<a href="https://www.graphql-java.com/documentation/sdl-directives/">Schema Directives</a> in the
+GraphQL Java documentation.</p>
+</div>
+<div class="paragraph">
+<p>In Spring GraphQL you can register a <code>SchemaDirectiveWiring</code> through a
+<a href="#execution.graphqlsource.runtimewiring-configurer"><code>RuntimeWiringConfigurer</code></a>. The <a href="boot-starter.html" class="xref page">Boot Starter</a> detects
+such beans, so you might have something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Configuration
+public class GraphQlConfig {
+
+	 @Bean
+	 public RuntimeWiringConfigurer runtimeWiringConfigurer() {
+		  return builder -&gt; builder.directiveWiring(new MySchemaDirectiveWiring());
+	 }
+
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+For an example of directives support check out the
+<a href="https://github.com/graphql-java/graphql-java-extended-validation">Extended Validation for Graphql Java</a>
+library.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.schema-transformation"><a class="anchor" href="#execution.graphqlsource.schema-transformation"></a>Schema Transformation</h3>
+<div class="paragraph">
+<p>You can register a <code>graphql.schema.GraphQLTypeVisitor</code> via
+<code>builder.schemaResources(..).typeVisitorsToTransformSchema(..)</code> if you want to traverse
+and transform the schema after it is created, and make changes to the schema. Keep in mind
+that this is more expensive than <a href="#execution.graphqlsource.schema-traversal">Schema Traversal</a> so generally
+prefer traversal to transformation unless you need to make schema changes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.schema-traversal"><a class="anchor" href="#execution.graphqlsource.schema-traversal"></a>Schema Traversal</h3>
+<div class="paragraph">
+<p>You can register a <code>graphql.schema.GraphQLTypeVisitor</code> via
+<code>builder.schemaResources(..).typeVisitors(..)</code> if you want to traverse the schema after
+it is created, and possibly apply changes to the <code>GraphQLCodeRegistry</code>. Keep in mind,
+however, that such a visitor cannot change the schema. See
+<a href="#execution.graphqlsource.schema-transformation">Schema Transformation</a>, if you need to make changes to the schema.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.schema-mapping-inspection"><a class="anchor" href="#execution.graphqlsource.schema-mapping-inspection"></a>Schema Mapping Inspection</h3>
+<div class="paragraph">
+<p>If a query, mutation, or subscription operation does not have a <code>DataFetcher</code>, it won&#8217;t
+return any data, and won&#8217;t do anything useful. Likewise, fields on schema types returned
+by an operation that are covered neither explicitly through a <code>DataFetcher</code>
+registration, nor implicitly by the default <code>PropertyDataFetcher</code>, which looks for a
+matching Java object property, will always be <code>null</code>.</p>
+</div>
+<div class="paragraph">
+<p>GraphQL Java does not perform checks to ensure every schema field is covered, and that
+can result in gaps that might not be discovered depending on test coverage. At runtime
+you may get a "silent" <code>null</code>, or an error if the field is not nullable. As a lower level
+library, GraphQL Java simply does not know enough about <code>DataFetcher</code> implementations and
+their return types, and therefore can&#8217;t compare schema type structure against Java object
+structure.</p>
+</div>
+<div class="paragraph">
+<p>Spring for GraphQL defines the <code>SelfDescribingDataFetcher</code> interface to allow a
+<code>DataFetcher</code> to expose return type information. All Spring <code>DataFetcher</code> implementations
+implement this interface. That includes those for <a href="controllers.html" class="xref page">Annotated Controllers</a>, and those for
+<a href="data.html#data.querydsl" class="xref page">Querydsl</a> and <a href="data.html#data.querybyexample" class="xref page">Query by Example</a> Spring Data repositories. For annotated
+controllers, the return type is derived from the declared return type on a
+<code>@SchemaMapping</code> method.</p>
+</div>
+<div class="paragraph">
+<p>On startup, Spring for GraphQL can inspect schema fields, <code>DataFetcher</code> registrations,
+and the properties of Java objects returned from <code>DataFetcher</code> implementations to check
+if all schema fields are covered either by an explicitly registered <code>DataFetcher</code>, or
+a matching Java object property. The inspection also performs a reverse check looking for
+<code>DataFetcher</code> registrations against schema fields that don&#8217;t exist.</p>
+</div>
+<div class="paragraph">
+<p>To enable inspection of schema mappings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">GraphQlSource.Builder builder = ...
+
+builder.schemaResources(..)
+		.inspectSchemaMappings(report -&gt; {
+			logger.debug(report);
+		})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Below is an example report:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GraphQL schema inspection:
+    Unmapped fields: {Book=[title], Author[firstName, lastName]} <i class="conum" data-value="1"></i><b>(1)</b>
+    Unmapped registrations: {Book.reviews=BookController#reviews[1 args]} <i class="conum" data-value="2"></i><b>(2)</b>
+    Skipped types: [BookOrAuthor] <i class="conum" data-value="3"></i><b>(3)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>List of schema fields and their source types that are not mapped</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>List of <code>DataFetcher</code> registrations on fields that don&#8217;t exist</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>List of schema types that are skipped, as explained next</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>There are limits to what schema field inspection can do, in particular when there is
+insufficient Java type information. This is the case if an annotated controller method is
+declared to return <code>java.lang.Object</code>, or if the return type has an unspecified generic
+parameter such as <code>List&lt;?&gt;</code>, or if the <code>DataFetcher</code> does not implement
+<code>SelfDescribingDataFetcher</code> and the return type is not even known. In such cases, the
+Java object type structure remains unknown, and the schema type is listed as skipped in
+the resulting report. For every skipped type, a DEBUG message is logged to indicate why
+it was skipped.</p>
+</div>
+<div class="paragraph">
+<p>Schema union types are always skipped because there is no way for a controller method to
+declare such a return type in Java, and the Java type structure is unknown.</p>
+</div>
+<div class="paragraph">
+<p>Schema interface types are supported only as far as fields declared directly, which are
+compared against properties on the Java type declared by a <code>SelfDescribingDataFetcher</code>.
+Additional fields on concrete implementations are not inspected. This could be improved
+in a future release to also inspect schema <code>interface</code> implementation types and to try
+to find a match among subtypes of the declared Java return type.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.graphqlsource.operation-caching"><a class="anchor" href="#execution.graphqlsource.operation-caching"></a>Operation Caching</h3>
+<div class="paragraph">
+<p>GraphQL Java must <em>parse</em> and <em>validate</em> an operation before executing it. This may impact
+performance significantly. To avoid the need to re-parse and validate, an application may
+configure a <code>PreparsedDocumentProvider</code> that caches and reuses Document instances. The
+<a href="https://www.graphql-java.com/documentation/execution/#query-caching">GraphQL Java docs</a> provide more details on
+query caching through a <code>PreparsedDocumentProvider</code>.</p>
+</div>
+<div class="paragraph">
+<p>In Spring GraphQL you can register a <code>PreparsedDocumentProvider</code> through
+<code>GraphQlSource.Builder#configureGraphQl</code>:
+.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Typically, accessed through Spring Boot's GraphQlSourceBuilderCustomizer
+GraphQlSource.Builder builder = ...
+
+// Create provider
+PreparsedDocumentProvider provider = ...
+
+builder.schemaResources(..)
+		.configureRuntimeWiring(..)
+		.configureGraphQl(graphQLBuilder -&gt; graphQLBuilder.preparsedDocumentProvider(provider))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="#execution.graphqlsource">GraphQlSource section</a> explains how to configure that with Spring Boot.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="execution.reactive-datafetcher"><a class="anchor" href="#execution.reactive-datafetcher"></a>Reactive <code>DataFetcher</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default <code>GraphQlSource</code> builder enables support for a <code>DataFetcher</code> to return <code>Mono</code>
+or <code>Flux</code> which adapts those to a <code>CompletableFuture</code> where <code>Flux</code> values are aggregated
+and turned into a List, unless the request is a GraphQL subscription request,
+in which case the return value remains a Reactive Streams <code>Publisher</code> for streaming
+GraphQL responses.</p>
+</div>
+<div class="paragraph">
+<p>A reactive <code>DataFetcher</code> can rely on access to Reactor context propagated from the
+transport layer, such as from a WebFlux request handling, see
+<a href="#execution.context.webflux">WebFlux Context</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="execution.context"><a class="anchor" href="#execution.context"></a>Context Propagation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Spring for GraphQL provides support to transparently propagate context from the
+<a href="transports.html#server.transports.http" class="xref page">HTTP</a>, through GraphQL Java, and to <code>DataFetcher</code> and other components it
+invokes. This includes both <code>ThreadLocal</code> context from the Spring MVC request handling
+thread and Reactor <code>Context</code> from the WebFlux processing pipeline.</p>
+</div>
+<div class="sect2">
+<h3 id="execution.context.webmvc"><a class="anchor" href="#execution.context.webmvc"></a>WebMvc</h3>
+<div class="paragraph">
+<p>A <code>DataFetcher</code> and other components invoked by GraphQL Java may not always execute on
+the same thread as the Spring MVC handler, for example if an asynchronous
+<a href="transports.html#server.interception" class="xref page"><code>WebGraphQlInterceptor</code></a> or <code>DataFetcher</code> switches to a
+different thread.</p>
+</div>
+<div class="paragraph">
+<p>Spring for GraphQL supports propagating <code>ThreadLocal</code> values from the Servlet container
+thread to the thread a <code>DataFetcher</code> and other components invoked by GraphQL Java to
+execute on. To do this, an application needs to implement
+<code>io.micrometer.context.ThreadLocalAccessor</code> for a <code>ThreadLocal</code> values of interest:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class RequestAttributesAccessor implements ThreadLocalAccessor&lt;RequestAttributes&gt; {
+
+    @Override
+    public Object key() {
+        return RequestAttributesAccessor.class.getName();
+    }
+
+    @Override
+    public RequestAttributes getValue() {
+        return RequestContextHolder.getRequestAttributes();
+    }
+
+    @Override
+    public void setValue(RequestAttributes attributes) {
+        RequestContextHolder.setRequestAttributes(attributes);
+    }
+
+    @Override
+    public void reset() {
+        RequestContextHolder.resetRequestAttributes();
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can register a <code>ThreadLocalAccessor</code> manually on startup with the global
+<code>ContextRegistry</code> instance, which is accessible via
+<code>io.micrometer.context.ContextRegistry#getInstance()</code>. You can also register it
+automatically through the <code>java.util.ServiceLoader</code> mechanism.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.context.webflux"><a class="anchor" href="#execution.context.webflux"></a>WebFlux</h3>
+<div class="paragraph">
+<p>A <a href="#execution.reactive-datafetcher">Reactive <code>DataFetcher</code></a> can rely on access to Reactor context that
+originates from the WebFlux request handling chain. This includes Reactor context
+added by <a href="transports.html#server.interception" class="xref page">WebGraphQlInterceptor</a> components.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="execution.exceptions"><a class="anchor" href="#execution.exceptions"></a>Exceptions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In GraphQL Java, <code>DataFetcherExceptionHandler</code> decides how to represent exceptions from
+data fetching in the "errors" section of the response. An application can register a
+single handler only.</p>
+</div>
+<div class="paragraph">
+<p>Spring for GraphQL registers a <code>DataFetcherExceptionHandler</code> that provides default
+handling and enables the <code>DataFetcherExceptionResolver</code> contract. An application can
+register any number of resolvers via <a href="#execution.graphqlsource"><code>GraphQLSource</code></a> builder and those are in
+order until one them resolves the <code>Exception</code> to a <code>List&lt;graphql.GraphQLError&gt;</code>.
+The Spring Boot starter detects beans of this type.</p>
+</div>
+<div class="paragraph">
+<p><code>DataFetcherExceptionResolverAdapter</code> is a convenient base class with protected methods
+<code>resolveToSingleError</code> and <code>resolveToMultipleErrors</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="controllers.html" class="xref page">Annotated Controllers</a> programming model enables handling data fetching exceptions with
+annotated exception handler methods with a flexible method signature, see
+<a href="controllers.html#controllers.exception-handler" class="xref page"><code>@GraphQlExceptionHandler</code></a> for details.</p>
+</div>
+<div class="paragraph">
+<p>A <code>GraphQLError</code> can be assigned to a category based on the GraphQL Java
+<code>graphql.ErrorClassification</code>, or the Spring GraphQL <code>ErrorType</code>, which defines the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>BAD_REQUEST</code></p>
+</li>
+<li>
+<p><code>UNAUTHORIZED</code></p>
+</li>
+<li>
+<p><code>FORBIDDEN</code></p>
+</li>
+<li>
+<p><code>NOT_FOUND</code></p>
+</li>
+<li>
+<p><code>INTERNAL_ERROR</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If an exception remains unresolved, by default it is categorized as an <code>INTERNAL_ERROR</code>
+with a generic message that includes the category name and the <code>executionId</code> from
+<code>DataFetchingEnvironment</code>. The message is intentionally opaque to avoid leaking
+implementation details. Applications can use a <code>DataFetcherExceptionResolver</code> to customize
+error details.</p>
+</div>
+<div class="paragraph">
+<p>Unresolved exception are logged at ERROR level along with the <code>executionId</code> to correlate
+to the error sent to the client. Resolved exceptions are logged at DEBUG level.</p>
+</div>
+<div class="sect2">
+<h3 id="execution.exceptions.request"><a class="anchor" href="#execution.exceptions.request"></a>Request Exceptions</h3>
+<div class="paragraph">
+<p>The GraphQL Java engine may run into validation or other errors when parsing the request
+and that in turn prevent request execution. In such cases, the response contains a
+"data" key with <code>null</code> and one or more request-level "errors" that are global, i.e. not
+having a field path.</p>
+</div>
+<div class="paragraph">
+<p><code>DataFetcherExceptionResolver</code> cannot handle such global errors because they are raised
+before execution begins and before any <code>DataFetcher</code> is invoked. An application can use
+transport level interceptors to inspect and transform errors in the <code>ExecutionResult</code>.
+See examples under <a href="transports.html#server.interception.web" class="xref page"><code>WebGraphQlInterceptor</code></a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.exceptions.subscription"><a class="anchor" href="#execution.exceptions.subscription"></a>Subscription Exceptions</h3>
+<div class="paragraph">
+<p>The <code>Publisher</code> for a subscription request may complete with an error signal in which case
+the underlying transport (e.g. WebSocket) sends a final "error" type message with a list
+of GraphQL errors.</p>
+</div>
+<div class="paragraph">
+<p><code>DataFetcherExceptionResolver</code> cannot resolve errors from a subscription <code>Publisher</code>,
+since the data <code>DataFetcher</code> only creates the <code>Publisher</code> initially. After that, the
+transport subscribes to the <code>Publisher</code> that may then complete with an error.</p>
+</div>
+<div class="paragraph">
+<p>An application can register a <code>SubscriptionExceptionResolver</code> in order to resolve
+exceptions from a subscription <code>Publisher</code> in order to resolve those to GraphQL errors
+to send to the client.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="execution.pagination"><a class="anchor" href="#execution.pagination"></a>Pagination</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The GraphQL <a href="https://relay.dev/graphql/connections.htm">Cursor Connection specification</a>
+defines a way to navigate large result sets by returning a subset of items at a time where
+each item is paired with a cursor that clients can use to request more items before or
+after the referenced item.</p>
+</div>
+<div class="paragraph">
+<p>The specification calls the pattern <em>"Connections"</em>. A schema type with a name that ends
+on Connection is a <em>Connection Type</em> that represents a paginated result set. All <code>~Connection</code>
+types contain an "edges" field where <code>~Edge</code> type pairs the actual item with a cursor, as
+well as a "pageInfo" field with boolean flags to indicate if there are more items forward
+and backward.</p>
+</div>
+<div class="sect2">
+<h3 id="execution.pagination.types"><a class="anchor" href="#execution.pagination.types"></a>Connection Types</h3>
+<div class="paragraph">
+<p><code>Connection</code> type definitions must be created for every type that needs pagination, adding
+boilerplate and noise to the schema. Spring for GraphQL provides
+<code>ConnectionTypeDefinitionConfigurer</code> to add these types on startup, if not already
+present in the parsed schema files. That means in the schema you only need this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-graphql hljs" data-lang="graphql">Query {
+	books(first:Int, after:String, last:Int, before:String): BookConnection
+}
+
+type Book {
+	id: ID!
+	title: String!
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note the spec-defined forward pagination arguments <code>first</code> and <code>after</code> that clients can use
+to request the first N items after the given cursor, while <code>last</code> and <code>before</code> are backward
+pagination arguments to request the last N items before the given cursor.</p>
+</div>
+<div class="paragraph">
+<p>Next, configure <code>ConnectionTypeDefinitionConfigurer</code> as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">GraphQlSource.schemaResourceBuilder()
+		.schemaResources(..)
+		.typeDefinitionConfigurer(new ConnectionTypeDefinitionConfigurer)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and the following type definitions will be transparently added to the schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-graphql hljs" data-lang="graphql">type BookConnection {
+	edges: [BookEdge]!
+	pageInfo: PageInfo!
+}
+
+type BookEdge {
+	node: Book!
+	cursor: String!
+}
+
+type PageInfo {
+	hasPreviousPage: Boolean!
+	hasNextPage: Boolean!
+	startCursor: String
+	endCursor: String
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="boot-starter.html" class="xref page">Boot Starter</a> registers <code>ConnectionTypeDefinitionConfigurer</code> by default.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.pagination.adapters"><a class="anchor" href="#execution.pagination.adapters"></a><code>ConnectionAdapter</code></h3>
+<div class="paragraph">
+<p>Once <a href="#execution.pagination.types">Connection Types</a> are available in the schema, you also need
+equivalent Java types. GraphQL Java provides those, including generic <code>Connection</code> and
+<code>Edge</code>, as well as a <code>PageInfo</code>.</p>
+</div>
+<div class="paragraph">
+<p>One option is to populate a <code>Connection</code> and return it from your controller method or
+<code>DataFetcher</code>. However, this requires boilerplate code to create the <code>Connection</code>,
+creating cursors, wrapping each item as an <code>Edge</code>, and creating the <code>PageInfo</code>.
+Moreover, you may already have an underlying pagination mechanism such as when using
+Spring Data repositories.</p>
+</div>
+<div class="paragraph">
+<p>Spring for GraphQL defines the <code>ConnectionAdapter</code> contract to adapt a container of items
+to <code>Connection</code>. Adapters are applied through a <code>DataFetcher</code> decorator that is in turn
+installed through a <code>ConnectionFieldTypeVisitor</code>. You can configure it as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ConnectionAdapter adapter = ... ;
+GraphQLTypeVisitor visitor = ConnectionFieldTypeVisitor.create(List.of(adapter)) <i class="conum" data-value="1"></i><b>(1)</b>
+
+GraphQlSource.schemaResourceBuilder()
+		.schemaResources(..)
+		.typeDefinitionConfigurer(..)
+		.typeVisitors(List.of(visitor)) <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create type visitor with one or more <code>ConnectionAdapter</code>s.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Resister the type visitor.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>There are <a href="data.html#data.pagination.scroll" class="xref page">built-in</a> <code>ConnectionAdapter</code>s for Spring Data&#8217;s
+<code>Window</code> and <code>Slice</code>. You can also create your own custom adapter. <code>ConnectionAdapter</code>
+implementations rely on a <a href="#execution.pagination.cursor.strategy"><code>CursorStrategy</code></a> to
+create cursors for returned items. The same strategy is also used to support the
+<a href="controllers.html#controllers.schema-mapping.subrange" class="xref page"><code>Subrange</code></a> controller method argument that contains
+pagination input.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.pagination.cursor.strategy"><a class="anchor" href="#execution.pagination.cursor.strategy"></a><code>CursorStrategy</code></h3>
+<div class="paragraph">
+<p><code>CursorStrategy</code> is a contract to encode and decode a String cursor that refers to the
+position of an item within a large result set. The cursor can be based on an index or
+on a keyset.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="#execution.pagination.adapters"><code>ConnectionAdapter</code></a> uses this to encode cursors for returned items.
+<a href="controllers.html" class="xref page">Annotated Controllers</a> methods, <a href="data.html#data.querydsl" class="xref page">Querydsl</a> repositories, and <a href="data.html#data.querybyexample" class="xref page">Query by Example</a>
+repositories use it to decode cursors from pagination requests, and create a <code>Subrange</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>CursorEncoder</code> is a related contract that further encodes and decodes String cursors to
+make them opaque to clients. <code>EncodingCursorStrategy</code> combines <code>CursorStrategy</code> with a
+<code>CursorEncoder</code>. You can use <code>Base64CursorEncoder</code>, <code>NoOpEncoder</code> or create your own.</p>
+</div>
+<div class="paragraph">
+<p>There is a <a href="data.html#data.pagination.scroll" class="xref page">built-in</a> <code>CursorStrategy</code> for the Spring Data
+<code>ScrollPosition</code>. The <a href="boot-starter.html" class="xref page">Boot Starter</a> registers a <code>CursorStrategy&lt;ScrollPosition&gt;</code> with
+<code>Base64Encoder</code> when Spring Data is present.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.pagination.sort.strategy"><a class="anchor" href="#execution.pagination.sort.strategy"></a>Sort</h3>
+<div class="paragraph">
+<p>There is no standard way to provide sort information in a GraphQL request. However,
+pagination depends on a stable sort order. You can use a default order, or otherwise
+expose input types and extract sort details from GraphQL arguments.</p>
+</div>
+<div class="paragraph">
+<p>There is <a href="data.html#data.pagination.sort" class="xref page">built-in</a> support for Spring Data&#8217;s <code>Sort</code> as a controller
+method argument. For this to work, you need to have a <code>SortStrategy</code> bean.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="execution.batching"><a class="anchor" href="#execution.batching"></a>Batch Loading</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Given a <code>Book</code> and its <code>Author</code>, we can create one <code>DataFetcher</code> for a book and another
+for its author. This allows selecting books with or without authors, but it means books
+and authors aren&#8217;t loaded together, which is especially inefficient when querying multiple
+books as the author for each book is loaded individually. This is known as the N+1 select
+problem.</p>
+</div>
+<div class="sect2">
+<h3 id="execution.batching.dataloader"><a class="anchor" href="#execution.batching.dataloader"></a><code>DataLoader</code></h3>
+<div class="paragraph">
+<p>GraphQL Java provides a <code>DataLoader</code> mechanism for batch loading of related entities.
+You can find the full details in the
+<a href="https://www.graphql-java.com/documentation/batching/">GraphQL Java docs</a>. Below is a
+summary of how it works:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Register <code>DataLoader</code>'s in the <code>DataLoaderRegistry</code> that can load entities, given unique keys.</p>
+</li>
+<li>
+<p><code>DataFetcher</code>'s can access <code>DataLoader</code>'s and use them to load entities by id.</p>
+</li>
+<li>
+<p>A <code>DataLoader</code> defers loading by returning a future so it can be done in a batch.</p>
+</li>
+<li>
+<p><code>DataLoader</code>'s maintain a per request cache of loaded entities that can further
+improve efficiency.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.batching.batch-loader-registry"><a class="anchor" href="#execution.batching.batch-loader-registry"></a><code>BatchLoaderRegistry</code></h3>
+<div class="paragraph">
+<p>The complete batching loading mechanism in GraphQL Java requires implementing one of
+several <code>BatchLoader</code> interface, then wrapping and registering those as <code>DataLoader</code>s
+with a name in the <code>DataLoaderRegistry</code>.</p>
+</div>
+<div class="paragraph">
+<p>The API in Spring GraphQL is slightly different. For registration, there is only one,
+central <code>BatchLoaderRegistry</code> exposing factory methods and a builder to create and
+register any number of batch loading functions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Configuration
+public class MyConfig {
+
+	public MyConfig(BatchLoaderRegistry registry) {
+
+		registry.forTypePair(Long.class, Author.class).registerMappedBatchLoader((authorIds, env) -&gt; {
+				// return Mono&lt;Map&lt;Long, Author&gt;
+		});
+
+		// more registrations ...
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="boot-starter.html" class="xref page">Boot Starter</a> declares a <code>BatchLoaderRegistry</code> bean that you can inject into
+your configuration, as shown above, or into any component such as a controller in order
+register batch loading functions. In turn the <code>BatchLoaderRegistry</code> is injected into
+<code>DefaultExecutionGraphQlService</code> where it ensures <code>DataLoader</code> registrations per request.</p>
+</div>
+<div class="paragraph">
+<p>By default, the <code>DataLoader</code> name is based on the class name of the target entity.
+This allows an <code>@SchemaMapping</code> method to declare a
+<a href="controllers.html#controllers.schema-mapping.data-loader" class="xref page">DataLoader argument</a> with a generic type, and
+without the need for specifying a name. The name, however, can be customized through the
+<code>BatchLoaderRegistry</code> builder, if necessary, along with other <code>DataLoaderOptions</code>.</p>
+</div>
+<div class="paragraph">
+<p>To configure default <code>DataLoaderOptions</code> globally, to use as a starting point for any
+registration, you can override Boot&#8217;s <code>BatchLoaderRegistry</code> bean and use the constructor
+for <code>DefaultBatchLoaderRegistry</code> that accepts <code>Supplier&lt;DataLoaderOptions&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>For many cases, when loading related entities, you can use
+<a href="controllers.html#controllers.batch-mapping" class="xref page">@BatchMapping</a> controller methods, which are a shortcut
+for and replace the need to use <code>BatchLoaderRegistry</code> and <code>DataLoader</code> directly.</p>
+</div>
+<div class="paragraph">
+<p><code>BatchLoaderRegistry</code> provides other important benefits too. It supports access to
+the same <code>GraphQLContext</code> from batch loading functions and from <code>@BatchMapping</code> methods,
+as well as ensures <a href="#execution.context">Context Propagation</a> to them. This is why applications are expected
+to use it. It is possible to perform your own <code>DataLoader</code> registrations directly but
+such registrations would forgo the above benefits.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="execution.batching.testing"><a class="anchor" href="#execution.batching.testing"></a>Testing Batch Loading</h3>
+<div class="paragraph">
+<p>Start by having <code>BatchLoaderRegistry</code> perform registrations on a <code>DataLoaderRegistry</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">BatchLoaderRegistry batchLoaderRegistry = new DefaultBatchLoaderRegistry();
+// perform registrations...
+
+DataLoaderRegistry dataLoaderRegistry = DataLoaderRegistry.newRegistry().build();
+batchLoaderRegistry.registerDataLoaders(dataLoaderRegistry, graphQLContext);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now you can access and test individual <code>DataLoader</code>'s as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DataLoader&lt;Long, Book&gt; loader = dataLoaderRegistry.getDataLoader(Book.class.getName());
+loader.load(1L);
+loader.loadMany(Arrays.asList(2L, 3L));
+List&lt;Book&gt; books = loader.dispatchAndJoin(); // actual loading
+
+assertThat(books).hasSize(3);
+assertThat(books.get(0).getName()).isEqualTo("...");
+// ...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="transports.html">Server Transports</a></span>
+  <span class="next"><a href="data.html">Data Integration</a></span>
+</nav>
+</article>
+</div>  </div>
+</main>
+<div class="modal micromodal-slide" id="modal-versions" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+            <main class="modal__content" id="modal-versions-content">
+              <button data-micromodal-close class="modal-versions-close">
+                <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>
+              </button>
+              <div class="colset">
+                <div class="col-left">
+                  <ul class="nav-versions">
+                    <li class="component is-current">
+                      <a class="title" href="index.html">Spring GraphQL</a>
+                      <ul class="versions">
+                        <li class="version is-current is-latest">
+                          <a href="index.html">
+                            1.2.3-SNAPSHOT<span class="current">current</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-right">
+                  <ul>
+                    <li>
+                      Related Spring Documentation
+                      <ul>
+                        <li><a href="https://docs.spring.io/spring-framework/reference/">Spring Framework</a></li>
+                        <li><a href="https://docs.spring.io/spring-security/reference/">Spring Security</a></li>
+                        <li><a href="https://docs.spring.io/spring-ldap/reference/">Spring LDAP</a></li>
+                        <li><a href="https://docs.spring.io/spring-session/reference/">Spring Session</a></li>
+                        <li><a href="https://docs.spring.io/spring-authorization-server/reference/">Spring Authorization Server</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer flex">
+    <div id="spring-links flex">
+        <img id="springlogo" src="./_/img/spring-logo.svg" alt="Spring">
+        <p class="smallest antialiased">© <script>var d = new Date();
+        document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+    </div>
+    <div id="social-icons" class="flex jc-between">
+        <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
+        <a href="https://github.com/spring-projects" title="Github"><svg id="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><path class="cls-1" d="M38,0a38,38,0,1,0,38,38A38,38,0,0,0,38,0Z"/></g><path class="cls-2" d="M38,15.59A22.95,22.95,0,0,0,30.71,60.3c1.15.21,1.57-.5,1.57-1.11s0-2,0-3.9c-6.38,1.39-7.73-3.07-7.73-3.07A6.09,6.09,0,0,0,22,48.86c-2.09-1.42.15-1.39.15-1.39a4.81,4.81,0,0,1,3.52,2.36c2,3.5,5.37,2.49,6.67,1.91a4.87,4.87,0,0,1,1.46-3.07c-5.09-.58-10.45-2.55-10.45-11.34a8.84,8.84,0,0,1,2.36-6.15,8.29,8.29,0,0,1,.23-6.07s1.92-.62,6.3,2.35a21.82,21.82,0,0,1,11.49,0c4.38-3,6.3-2.35,6.3-2.35a8.29,8.29,0,0,1,.23,6.07,8.84,8.84,0,0,1,2.36,6.15c0,8.81-5.37,10.75-10.48,11.32a5.46,5.46,0,0,1,1.56,4.25c0,3.07,0,5.54,0,6.29s.42,1.33,1.58,1.1A22.94,22.94,0,0,0,38,15.59Z"/></svg></a>
+        <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
+    </div>
+</footer>
+<script src="./_/js/vendor/import.js"></script>
+<script src="./_/js/site.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<script async src="./_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <main class="modal__content" id="modal-1-content">
+                <div id="searchbox"></div>
+                <div id="counter"></div>
+                <div class="search-by">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
+                        <img class="light" width="140" src="./_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="./_/img/algolia-dark.svg" />
+                    </a>
+                </div>
+                <div id="hits"></div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
+<script async id="search-script" src="./_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springgraphql" data-stylesheet="./_/css/vendor/search.css" data-page-version="1.2.3"></script>
+
+  </body>
+</html>
