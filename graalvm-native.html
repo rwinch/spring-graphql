@@ -459,11 +459,45 @@ This is all done automatically for you if you are building a Spring Boot applica
 <p>If your application is "manually" registering data fetchers, some types are not discoverable as a result.
 You should then register them with Spring Framework&#8217;s <code>@RegisterReflectionForBinding</code>:</p>
 </div>
-<div class="paragraph">
-<p>include-code:GraphQlConfiguration[]
-&lt;1&gt; This application declares a <code>RuntimeWiringConfigurer</code> that "manually" adds a <code>DataFetcher</code>
-&lt;2&gt; Through this <code>DataFetcher</code>, the <code>BookRepository</code> will expose a <code>Book</code> type
-&lt;3&gt; <code>@RegisterReflectionForBinding</code> will register the relevant hints for the <code>Book</code> type and all types exposed as fields</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"><span class="fold-block is-hidden-folded">import graphql.schema.DataFetcher;
+
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.graphql.data.query.QuerydslDataFetcher;
+import org.springframework.graphql.execution.RuntimeWiringConfigurer;
+
+</span><span class="fold-block">@Configuration
+@RegisterReflectionForBinding(Book.class) <i class="conum" data-value="3"></i><b>(3)</b>
+public class GraphQlConfiguration {
+
+	@Bean
+	RuntimeWiringConfigurer customWiringConfigurer(BookRepository bookRepository) { <i class="conum" data-value="1"></i><b>(1)</b>
+		DataFetcher&lt;Book&gt; dataFetcher = QuerydslDataFetcher.builder(bookRepository).single();
+		return wiringBuilder -&gt; wiringBuilder
+				.type("Query", builder -&gt; builder.dataFetcher("book", dataFetcher)); <i class="conum" data-value="2"></i><b>(2)</b>
+	}
+
+}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This application declares a <code>RuntimeWiringConfigurer</code> that "manually" adds a <code>DataFetcher</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Through this <code>DataFetcher</code>, the <code>BookRepository</code> will expose a <code>Book</code> type</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><code>@RegisterReflectionForBinding</code> will register the relevant hints for the <code>Book</code> type and all types exposed as fields</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -476,10 +510,55 @@ The <code>AotProcessor</code> strategy described in the section above cannot be 
 For client support, Spring for GraphQL embeds the <a href="https://github.com/spring-projects/spring-graphql/tree/main/spring-graphql/src/main/resources/META-INF/native-image/org.springframework.graphql/spring-graphql">relevant reachability metadata for the client infrastructure</a>.
 When it comes to Java types used by the application, applications should use a similar strategy as "manual" data fetchers using <code>@RegisterReflectionForBinding</code>:</p>
 </div>
-<div class="paragraph">
-<p>include-code:ProjectService[]
-&lt;1&gt; In a Native image, we need to ensure that reflection can be performed on <code>Project</code> at runtime
-&lt;2&gt; <code>@RegisterReflectionForBinding</code> will register the relevant hints for the <code>Project</code> type and all types exposed as fields</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"><span class="fold-block is-hidden-folded">import reactor.core.publisher.Mono;
+
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
+import org.springframework.graphql.client.GraphQlClient;
+import org.springframework.stereotype.Component;
+
+</span><span class="fold-block">@Component
+@RegisterReflectionForBinding(Project.class) <i class="conum" data-value="2"></i><b>(2)</b>
+public class ProjectService {
+
+	private final GraphQlClient graphQlClient;
+
+	public ProjectService(GraphQlClient graphQlClient) {
+		this.graphQlClient = graphQlClient;
+	}
+
+	public Mono&lt;Project&gt; project(String projectSlug) {
+		String document = """
+				query projectWithReleases($projectSlug: ID!) {
+					project(slug: $projectSlug) {
+						name
+						releases {
+							version
+						}
+					}
+				}
+				""";
+
+		return this.graphQlClient.document(document)
+				.variable("projectSlug", projectSlug)
+				.retrieve("project")
+				.toEntity(Project.class); <i class="conum" data-value="1"></i><b>(1)</b>
+	}
+}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>In a Native image, we need to ensure that reflection can be performed on <code>Project</code> at runtime</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>@RegisterReflectionForBinding</code> will register the relevant hints for the <code>Project</code> type and all types exposed as fields</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

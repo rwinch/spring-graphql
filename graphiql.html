@@ -449,12 +449,51 @@ Alternatively, you can integrate the JavaScript build in your project as a separ
 <div class="paragraph">
 <p>Once a GraphiQL build is available on the classpath, you can expose it as an endpoint with the <a href="https://docs.spring.io/spring-framework/reference/web/webmvc-functional.html#webmvc-fn-router-functions">functional web frameworks</a>.</p>
 </div>
-<div class="paragraph">
-<p>include-code:GraphiQlConfiguration[]
-&lt;1&gt; Load the GraphiQL page from the classpath (here, we are using the version shipped with Spring for GraphQL)
-&lt;2&gt; Configure a web handler for processing HTTP requests; you can implement a custom <code>HandlerFunction</code> depending on your use case
-&lt;3&gt; Finally, map the handler to a specific HTTP endpoint
-&lt;4&gt; Expose this new route through a <code>RouterFunction</code> bean</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"><span class="fold-block is-hidden-folded">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.graphql.server.webmvc.GraphiQlHandler;
+import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.RouterFunctions;
+import org.springframework.web.servlet.function.ServerResponse;
+
+</span><span class="fold-block">@Configuration
+public class GraphiQlConfiguration {
+
+    @Bean
+    @Order(0)
+    public RouterFunction&lt;ServerResponse&gt; graphiQlRouterFunction() {
+        RouterFunctions.Builder builder = RouterFunctions.route();
+        ClassPathResource graphiQlPage = new ClassPathResource("graphiql/index.html"); <i class="conum" data-value="1"></i><b>(1)</b>
+        GraphiQlHandler graphiQLHandler = new GraphiQlHandler("/graphql", "", graphiQlPage); <i class="conum" data-value="2"></i><b>(2)</b>
+        builder = builder.GET("/graphiql", graphiQLHandler::handleRequest); <i class="conum" data-value="3"></i><b>(3)</b>
+        return builder.build(); <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Load the GraphiQL page from the classpath (here, we are using the version shipped with Spring for GraphQL)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Configure a web handler for processing HTTP requests; you can implement a custom <code>HandlerFunction</code> depending on your use case</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Finally, map the handler to a specific HTTP endpoint</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Expose this new route through a <code>RouterFunction</code> bean</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>You might also need to configure your application to <a href="https://docs.spring.io/spring-boot/docs/3.1.1/reference/html/web.html#web.servlet.spring-mvc.static-content">serve the relevant static resources</a>.</p>

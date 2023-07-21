@@ -1,6 +1,6 @@
 {
   "$id": "https://schemas.antora.org/site-manifest/1-0-0/draft-01",
-  "generated": "2023-07-21T04:07:32.674Z",
+  "generated": "2023-07-21T13:04:22.805Z",
   "url": "https://docs.spring.io/spring-graphql/reference",
   "components": {
     "graphql": {

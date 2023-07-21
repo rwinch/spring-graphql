@@ -536,8 +536,37 @@ handled as <code>request-stream</code>.</p>
 <p><code>GraphQlRSocketHandler</code> can be used a delegate from an <code>@Controller</code> that is mapped to
 the route for GraphQL requests. For example:</p>
 </div>
-<div class="paragraph">
-<p>include-code:GraphQlRSocketController[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"><span class="fold-block is-hidden-folded">import java.util.Map;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import org.springframework.graphql.server.GraphQlRSocketHandler;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.stereotype.Controller;
+
+</span><span class="fold-block">@Controller
+public class GraphQlRSocketController {
+
+	private final GraphQlRSocketHandler handler;
+
+	GraphQlRSocketController(GraphQlRSocketHandler handler) {
+		this.handler = handler;
+	}
+
+	@MessageMapping("graphql")
+	public Mono&lt;Map&lt;String, Object&gt;&gt; handle(Map&lt;String, Object&gt; payload) {
+		return this.handler.handle(payload);
+	}
+
+	@MessageMapping("graphql")
+	public Flux&lt;Map&lt;String, Object&gt;&gt; handleSubscription(Map&lt;String, Object&gt; payload) {
+		return this.handler.handleSubscription(payload);
+	}
+}</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -575,29 +604,160 @@ incoming requests and do one of the following:</p>
 <div class="paragraph">
 <p>For example, an interceptor can pass an HTTP request header to a <code>DataFetcher</code>:</p>
 </div>
-<div class="paragraph">
-<p>include-code:RequestHeaderInterceptor[]
-&lt;1&gt; Interceptor adds HTTP request header value into GraphQLContext
-&lt;2&gt; Data controller method accesses the value</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"><span class="fold-block is-hidden-folded">import java.util.Collections;
+
+import reactor.core.publisher.Mono;
+
+import org.springframework.graphql.data.method.annotation.ContextValue;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.server.WebGraphQlInterceptor;
+import org.springframework.graphql.server.WebGraphQlRequest;
+import org.springframework.graphql.server.WebGraphQlResponse;
+import org.springframework.stereotype.Controller;
+
+</span><span class="fold-block">class RequestHeaderInterceptor implements WebGraphQlInterceptor { <i class="conum" data-value="1"></i><b>(1)</b>
+
+	@Override
+	public Mono&lt;WebGraphQlResponse&gt; intercept(WebGraphQlRequest request, Chain chain) {
+		String value = request.getHeaders().getFirst("myHeader");
+		request.configureExecutionInput((executionInput, builder) -&gt;
+				builder.graphQLContext(Collections.singletonMap("myHeader", value)).build());
+		return chain.next(request);
+	}
+}
+
+@Controller
+class MyContextValueController { <i class="conum" data-value="2"></i><b>(2)</b>
+
+	@QueryMapping
+	Person person(@ContextValue String myHeader) {
+		...
+	}
+}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Interceptor adds HTTP request header value into GraphQLContext</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Data controller method accesses the value</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Reversely, an interceptor can access values added to the <code>GraphQLContext</code> by a controller:</p>
 </div>
-<div class="paragraph">
-<p>include-code:ResponseHeaderInterceptor[]
-&lt;1&gt; Controller adds value to the <code>GraphQLContext</code>
-&lt;2&gt; Interceptor uses the value to add an HTTP response header</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"><span class="fold-block is-hidden-folded">import graphql.GraphQLContext;
+import reactor.core.publisher.Mono;
+
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.server.WebGraphQlInterceptor;
+import org.springframework.graphql.server.WebGraphQlRequest;
+import org.springframework.graphql.server.WebGraphQlResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Controller;
+
+</span><span class="fold-block">// Subsequent access from a WebGraphQlInterceptor
+
+class ResponseHeaderInterceptor implements WebGraphQlInterceptor {
+
+	@Override
+	public Mono&lt;WebGraphQlResponse&gt; intercept(WebGraphQlRequest request, Chain chain) { <i class="conum" data-value="2"></i><b>(2)</b>
+		return chain.next(request).doOnNext(response -&gt; {
+			String value = response.getExecutionInput().getGraphQLContext().get("cookieName");
+			ResponseCookie cookie = ResponseCookie.from("cookieName", value).build();
+			response.getResponseHeaders().add(HttpHeaders.SET_COOKIE, cookie.toString());
+		});
+	}
+}
+
+@Controller
+class MyCookieController {
+
+	@QueryMapping
+	Person person(GraphQLContext context) { <i class="conum" data-value="1"></i><b>(1)</b>
+		context.put("cookieName", "123");
+		...
+	}
+}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Controller adds value to the <code>GraphQLContext</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Interceptor uses the value to add an HTTP response header</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>WebGraphQlHandler</code> can modify the <code>ExecutionResult</code>, for example, to inspect and modify
 request validation errors that are raised before execution begins and which cannot be
 handled with a <code>DataFetcherExceptionResolver</code>:</p>
 </div>
-<div class="paragraph">
-<p>include-code:RequestErrorInterceptor[]
-&lt;1&gt; Return the same if <code>ExecutionResult</code> has a "data" key with non-null value
-&lt;2&gt; Check and transform the GraphQL errors
-&lt;3&gt; Update the <code>ExecutionResult</code> with the modified errors</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java"><span class="fold-block is-hidden-folded">import java.util.List;
+
+import graphql.GraphQLError;
+import graphql.GraphqlErrorBuilder;
+import reactor.core.publisher.Mono;
+
+import org.springframework.graphql.server.WebGraphQlInterceptor;
+import org.springframework.graphql.server.WebGraphQlRequest;
+import org.springframework.graphql.server.WebGraphQlResponse;
+
+</span><span class="fold-block">class RequestErrorInterceptor implements WebGraphQlInterceptor {
+
+	@Override
+	public Mono&lt;WebGraphQlResponse&gt; intercept(WebGraphQlRequest request, Chain chain) {
+		return chain.next(request).map(response -&gt; {
+			if (response.isValid()) {
+				return response; <i class="conum" data-value="1"></i><b>(1)</b>
+			}
+
+			List&lt;GraphQLError&gt; errors = response.getErrors().stream() <i class="conum" data-value="2"></i><b>(2)</b>
+					.map(error -&gt; {
+						GraphqlErrorBuilder&lt;?&gt; builder = GraphqlErrorBuilder.newError();
+						// ...
+						return builder.build();
+					})
+					.toList();
+
+			return response.transform(builder -&gt; builder.errors(errors).build()); <i class="conum" data-value="3"></i><b>(3)</b>
+		});
+	}
+}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Return the same if <code>ExecutionResult</code> has a "data" key with non-null value</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Check and transform the GraphQL errors</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Update the <code>ExecutionResult</code> with the modified errors</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Use <code>WebGraphQlHandler</code> to configure the <code>WebGraphQlInterceptor</code> chain. This is supported
